@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
-
 /** Start */
 ReactDOM.render(
   <App />, document.getElementById('root')
