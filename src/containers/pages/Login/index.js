@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { actionUserName } from '../../../config/redux/action'
 
 
 // class Login extends Component {
@@ -14,15 +15,28 @@ import { connect } from 'react-redux'
 
 /** Stateless Component */
 const Login = (props) => {
+
+    const changeUser = () => {
+        props.changeUserName()
+    }
+
     return (
         <div>
-            <p>Login Page {props.popupProps}</p>
+            <p>Login Page {props.userName}</p>
+            <button onClick={changeUser}>Change User Name</button>
         </div>
     )
 }
 
+
 const reduxState = (state) => ({
-    popupProps: state.popup
+    popupProps: state.popup,
+    userName: state.user
 })
 
-export default connect(reduxState, null)(Login)
+const reduxDispatch = (dispatch) => ({
+    changeUserName: () => dispatch(actionUserName())
+})
+
+
+export default connect(reduxState, reduxDispatch)(Login)

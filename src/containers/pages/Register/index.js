@@ -42,6 +42,8 @@ class Register extends Component {
                             <Card>
                                 <Card.Body>
                                     <Form className="mb-2">
+                                        <h2 className="text-secondary">Register Page</h2>
+                                        <hr />
                                         <Form.Group >
                                             <Form.Label>Email address</Form.Label>
                                             <Form.Control type="email" id="email" placeholder="Enter email" onChange={this.handleChangeText} />
@@ -55,9 +57,6 @@ class Register extends Component {
                                             Submit
                                         </Button>
                                     </Form>
-
-                                    <Button variant="outline-secondary" size="sm">Go to Login</Button>
-                                    <Button variant="outline-secondary" size="sm">Go to Dashboard</Button>
                                 </Card.Body>
 
                             </Card>
