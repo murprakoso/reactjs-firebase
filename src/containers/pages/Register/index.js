@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import firebase from '../../../config/firebase';
+import { Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import Button from '../../../components/atoms/Buttons';
+import { registerUserAPI } from '../../../config/redux/action';
 
+
+/** Functional Componenet */
 class Register extends Component {
 
     state = {
@@ -16,20 +20,8 @@ class Register extends Component {
     }
 
     handleRegisterSubmit = () => {
-        // console.log(this.state.email);
-        // console.log(this.state.password);
         const { email, password } = this.state;
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(res => {
-                // Signed in
-                console.log('success: ', res);
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorCode, errorMessage);
-            });
-
+        this.props.registerAPI({ email, password })
     }
 
     render() {
@@ -41,22 +33,21 @@ class Register extends Component {
                         <Col md="5">
                             <Card>
                                 <Card.Body>
-                                    <Form className="mb-2">
-                                        <h2 className="text-secondary">Register Page</h2>
-                                        <hr />
-                                        <Form.Group >
-                                            <Form.Label>Email address</Form.Label>
-                                            <Form.Control type="email" id="email" placeholder="Enter email" onChange={this.handleChangeText} />
-                                        </Form.Group>
+                                    <h2 className="text-secondary">Register Page</h2>
+                                    <hr />
+                                    <Form.Group >
+                                        <Form.Label>Email address</Form.Label>
+                                        <Form.Control type="email" id="email" placeholder="Enter email" onChange={this.handleChangeText} />
+                                    </Form.Group>
 
-                                        <Form.Group>
-                                            <Form.Label>Password</Form.Label>
-                                            <Form.Control type="password" id="password" placeholder="Password" onChange={this.handleChangeText} />
-                                        </Form.Group>
-                                        <Button variant="primary" onClick={this.handleRegisterSubmit} className="col md-auto">
-                                            Submit
-                                        </Button>
-                                    </Form>
+                                    <Form.Group>
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control type="password" id="password" placeholder="Password" onChange={this.handleChangeText} />
+                                    </Form.Group>
+                                    {/* <Button variant="primary" onClick={this.handleRegisterSubmit} className="col md-auto">
+                                            Register
+                                        </Button> */}
+                                    <Button onClick={this.handleRegisterSubmit} title="Register" loading={this.props.isLoading} />
                                 </Card.Body>
 
                             </Card>
@@ -69,4 +60,12 @@ class Register extends Component {
     }
 }
 
-export default Register
+const reduxState = (state) => ({
+    isLoading: state.isLoading
+})
+
+const reduxDispatch = (dispatch) => ({
+    registerAPI: (data) => dispatch(registerUserAPI(data))
+})
+
+export default connect(reduxState, reduxDispatch)(Register)
