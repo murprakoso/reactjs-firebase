@@ -1,30 +1,32 @@
+import { CHANGE_ISLOGIN, CHANGE_LOADING, CHANGE_POPUP, CHANGE_USER } from "../../../constants/actionTypes"
+
 const initialState = {
     popup: false,
     isLogin: false,
     isLoading: false,
-    user: 'Prakoso Clan'
+    user: {}
 }
 
 const reducer = (state = initialState, action) => {
-    if (action.type === 'CHANGE_POPUP') {
+    if (action.type === CHANGE_POPUP) {
         return {
             ...state,
             popop: action.value
         }
     }
-    if (action.type === 'CHANGE_ISLOGIN') {
+    if (action.type === CHANGE_ISLOGIN) {
         return {
             ...state,
             isLogin: action.value
         }
     }
-    if (action.type === 'CHANGE_USER') {
+    if (action.type === CHANGE_USER) {
         return {
             ...state,
             user: action.value
         }
     }
-    if (action.type === 'CHANGE_LOADING') {
+    if (action.type === CHANGE_LOADING) {
         return {
             ...state,
             isLoading: action.value

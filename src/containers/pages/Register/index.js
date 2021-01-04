@@ -19,13 +19,18 @@ class Register extends Component {
         })
     }
 
-    handleRegisterSubmit = () => {
+    handleRegisterSubmit = async () => {
         const { email, password } = this.state;
-        this.props.registerAPI({ email, password })
+        const res = await this.props.registerAPI({ email, password }).catch(err => err)
+        if (res) {
+            this.setState({
+                email: '',
+                password: ''
+            })
+        }
     }
 
     render() {
-
         return (
             <div>
                 <Container>
@@ -37,16 +42,14 @@ class Register extends Component {
                                     <hr />
                                     <Form.Group >
                                         <Form.Label>Email address</Form.Label>
-                                        <Form.Control type="email" id="email" placeholder="Enter email" onChange={this.handleChangeText} />
+                                        <Form.Control type="email" id="email" placeholder="Enter email" onChange={this.handleChangeText} value={this.state.email} />
                                     </Form.Group>
 
                                     <Form.Group>
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" id="password" placeholder="Password" onChange={this.handleChangeText} />
+                                        <Form.Control type="password" id="password" placeholder="Password" onChange={this.handleChangeText} value={this.state.password} />
                                     </Form.Group>
-                                    {/* <Button variant="primary" onClick={this.handleRegisterSubmit} className="col md-auto">
-                                            Register
-                                        </Button> */}
+
                                     <Button onClick={this.handleRegisterSubmit} title="Register" loading={this.props.isLoading} />
                                 </Card.Body>
 
@@ -55,10 +58,11 @@ class Register extends Component {
                     </Row>
 
                 </Container>
-            </div >
+            </div>
         )
     }
 }
+
 
 const reduxState = (state) => ({
     isLoading: state.isLoading
@@ -67,5 +71,6 @@ const reduxState = (state) => ({
 const reduxDispatch = (dispatch) => ({
     registerAPI: (data) => dispatch(registerUserAPI(data))
 })
+
 
 export default connect(reduxState, reduxDispatch)(Register)
