@@ -1,5 +1,5 @@
 import firebase, { database } from '../../firebase';
-import { CHANGE_ISLOGIN, CHANGE_LOADING, CHANGE_USER } from "../../../constants/actionTypes"
+import { CHANGE_ISLOGIN, CHANGE_LOADING, CHANGE_USER, SET_NOTES } from "../../../constants/actionTypes"
 
 
 export const actionUserName = () => (dispatch) => {
@@ -71,5 +71,24 @@ export const addDataToAPI = (data) => (dispatch) => {
         title: data.title,
         content: data.content,
         date: data.date
+    })
+}
+
+export const getDataFromAPI = (userId) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        const urlNotes = database.ref('notes/' + userId);
+        urlNotes.on('value', (snapshot) => {
+            console.log(snapshot.val())
+            const data = []
+            Object.keys(snapshot.val()).forEach(key => {
+                data.push({
+                    id: key,
+                    data: snapshot.val()[key]
+                })
+            })
+
+            dispatch({ type: SET_NOTES, value: data })
+            resolve(data)
+        });
     })
 }

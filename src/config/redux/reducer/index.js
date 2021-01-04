@@ -1,10 +1,11 @@
-import { CHANGE_ISLOGIN, CHANGE_LOADING, CHANGE_POPUP, CHANGE_USER } from "../../../constants/actionTypes"
+import { CHANGE_ISLOGIN, CHANGE_LOADING, CHANGE_POPUP, CHANGE_USER, SET_NOTES } from "../../../constants/actionTypes"
 
 const initialState = {
     popup: false,
     isLogin: false,
     isLoading: false,
-    user: {}
+    user: {},
+    notes: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -30,6 +31,12 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             isLoading: action.value
+        }
+    }
+    if (action.type === SET_NOTES) {
+        return {
+            ...state,
+            notes: action.value
         }
     }
 

@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { addDataToAPI } from '../../../config/redux/action'
+import { addDataToAPI, getDataFromAPI } from '../../../config/redux/action'
 
 
 // const initialState = { title: '', content: '', date: '' }
@@ -11,8 +11,8 @@ class Dashboard extends Component {
     state = { title: '', content: '', date: '' }
 
     componentDidMount() {
-        const userData = localStorage.getItem('userData')
-        console.log(JSON.parse(userData));
+        const userData = JSON.parse(localStorage.getItem('userData'))
+        this.props.getNotes(userData.uid)
     }
 
     onInputChange = (e, type) => {
@@ -38,6 +38,8 @@ class Dashboard extends Component {
     render() {
 
         const { title, content } = this.state
+        const { notes } = this.props
+        console.log(notes);
 
         return (
             <div className="container">
@@ -48,11 +50,23 @@ class Dashboard extends Component {
                     <button className="btn btn-outline-primary" onClick={this.handleSaveNotes}>Simpan</button>
                 </div>
                 <hr />
-                <div className="card card-body shadow">
-                    <p>Title</p>
-                    <small>4 Januari 2021</small>
-                    <p>Content Notes</p>
-                </div>
+                {
+                    notes.length > 0 ? (
+                        <Fragment>
+                            {
+                                notes.map(note => {
+                                    return (
+                                        <div className="card card-body shadow mb-2" key={note.id}>
+                                            <p>{note.data.title}</p>
+                                            <small>{note.data.date}</small>
+                                            <p>{note.data.content}</p>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </Fragment>
+                    ) : 'Loading...'
+                }
 
             </div>
         )
@@ -61,11 +75,13 @@ class Dashboard extends Component {
 
 
 const reduxState = (state) => ({
-    userData: state.user
+    userData: state.user,
+    notes: state.notes
 })
 
 const reduxDispatch = (dispatch) => ({
-    saveNotes: (data) => dispatch(addDataToAPI(data))
+    saveNotes: (data) => dispatch(addDataToAPI(data)),
+    getNotes: (data) => dispatch(getDataFromAPI(data))
 })
 
 
