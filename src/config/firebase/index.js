@@ -1,8 +1,9 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 
 // Your web app's Firebase configuration
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyBjqcpfYFIxYwy1WXYGnigbJbjKxjh80bo",
     authDomain: "crud-82db0.firebaseapp.com",
     databaseURL: "https://crud-82db0-default-rtdb.firebaseio.com",
@@ -13,5 +14,7 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+export const database = firebase.database();
 
 export default firebase;

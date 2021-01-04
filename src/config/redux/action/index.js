@@ -1,4 +1,4 @@
-import firebase from '../../firebase';
+import firebase, { database } from '../../firebase';
 import { CHANGE_ISLOGIN, CHANGE_LOADING, CHANGE_USER } from "../../../constants/actionTypes"
 
 
@@ -8,8 +8,8 @@ export const actionUserName = () => (dispatch) => {
     }, null);
 }
 
-
-/** Register User */
+/** LOGIN */
+// Register 
 export const registerUserAPI = (data) => (dispatch) => {
     return new Promise((resolve, reject) => {
         dispatch({ type: CHANGE_LOADING, value: true })
@@ -31,7 +31,7 @@ export const registerUserAPI = (data) => (dispatch) => {
     })
 }
 
-/** Login User */
+// Login
 export const loginUserAPI = (data) => (dispatch) => {
 
     return new Promise((resolve, reject) => {
@@ -39,16 +39,16 @@ export const loginUserAPI = (data) => (dispatch) => {
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
             .then(res => {
                 // Logged in
-                console.log('success: ', res);
                 const dataUser = {
                     email: res.user.email,
-                    uuid: res.user.uuid,
-                    emailVerivied: res.user.emailVerivied
+                    uid: res.user.uid,
+                    emailVerified: res.user.emailVerified,
+                    refreshToken: res.user.refreshToken
                 }
                 dispatch({ type: CHANGE_LOADING, value: false })
                 dispatch({ type: CHANGE_ISLOGIN, value: true })
                 dispatch({ type: CHANGE_USER, value: dataUser })
-                resolve(true)
+                resolve(dataUser)
             })
             .catch((error) => {
                 var errorCode = error.code;
@@ -61,4 +61,15 @@ export const loginUserAPI = (data) => (dispatch) => {
             })
     })
 
+}
+
+/**
+ * CRUD
+ */
+export const addDataToAPI = (data) => (dispatch) => {
+    database.ref('notes/' + data.userId).push({
+        title: data.title,
+        content: data.content,
+        date: data.date
+    })
 }
