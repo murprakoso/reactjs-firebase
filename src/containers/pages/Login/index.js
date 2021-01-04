@@ -38,7 +38,8 @@ class Login extends Component {
         const res = await this.props.loginAPI({ email, password }).catch(err => err)
         if (res) {
             console.log('Login success')
-            console.log(res)
+            // console.log(res)
+            localStorage.setItem('userData', JSON.stringify(res))
             this.setState({
                 email: '',
                 password: ''

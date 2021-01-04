@@ -10,6 +10,11 @@ class Dashboard extends Component {
 
     state = { title: '', content: '', date: '' }
 
+    componentDidMount() {
+        const userData = localStorage.getItem('userData')
+        console.log(JSON.parse(userData));
+    }
+
     onInputChange = (e, type) => {
         this.setState({
             [type]: e.target.value
@@ -19,11 +24,12 @@ class Dashboard extends Component {
     handleSaveNotes = () => {
         const { title, content } = this.state
         const { saveNotes } = this.props
+        const userData = JSON.parse(localStorage.getItem('userData'))
         const data = {
             title: title,
             content: content,
             date: new Date().getTime(),
-            userId: this.props.userData.uid
+            userId: userData.uid
         }
         console.log(data)
         saveNotes(data)
