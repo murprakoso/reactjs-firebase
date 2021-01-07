@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { addDataToAPI, getDataFromAPI } from '../../../config/redux/action'
+import { addDataToAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action'
 
 
 // const initialState = { title: '', content: '', date: '' }
@@ -8,7 +8,7 @@ import { addDataToAPI, getDataFromAPI } from '../../../config/redux/action'
 
 class Dashboard extends Component {
 
-    state = { title: '', content: '', date: '' }
+    state = { title: '', content: '', date: '', textButton: 'Simpan', noteId: '' }
 
     componentDidMount() {
         const userData = JSON.parse(localStorage.getItem('userData'))
@@ -22,8 +22,8 @@ class Dashboard extends Component {
     }
 
     handleSaveNotes = () => {
-        const { title, content } = this.state
-        const { saveNotes } = this.props
+        const { title, content, textButton, noteId } = this.state
+        const { saveNotes, updateNotes } = this.props
         const userData = JSON.parse(localStorage.getItem('userData'))
         const data = {
             title: title,
@@ -31,15 +31,48 @@ class Dashboard extends Component {
             date: new Date().getTime(),
             userId: userData.uid
         }
-        console.log(data)
-        saveNotes(data)
+
+        if (textButton === 'Simpan') {
+            saveNotes(data)
+            this.clearState()
+        } else {
+            data.noteId = noteId
+            updateNotes(data)
+            this.clearState()
+        }
     }
 
+    clearState = () => {
+        this.setState({
+            title: '',
+            content: '',
+            textButton: 'Simpan',
+            noteId: ''
+        })
+    }
+
+    handleUpdateNotes = (note) => {
+        const { data } = note
+        // console.log(note.id);
+        this.setState({
+            title: data.title,
+            content: data.content,
+            textButton: 'Update',
+            noteId: note.id
+        })
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+    }
+
+
+    //render
     render() {
 
-        const { title, content } = this.state
+        const { title, content, textButton } = this.state
         const { notes } = this.props
-        console.log(notes);
 
         return (
             <div className="container">
@@ -47,7 +80,12 @@ class Dashboard extends Component {
                 <div className="form-group">
                     <input className="form-control mb-2" type="text" placeholder="title" value={title} onChange={(e) => this.onInputChange(e, 'title')} />
                     <textarea className="form-control mb-2" placeholder="content" value={content} onChange={(e) => this.onInputChange(e, 'content')}></textarea>
-                    <button className="btn btn-outline-primary" onClick={this.handleSaveNotes}>Simpan</button>
+                    <button className="btn btn-outline-primary" onClick={this.handleSaveNotes}>{textButton}</button>
+                    {
+                        textButton === 'Update' ? (
+                            <button className="btn btn-outline-warning ml-2" onClick={this.clearState}>Cancel</button>
+                        ) : null
+                    }
                 </div>
                 <hr />
                 {
@@ -56,13 +94,13 @@ class Dashboard extends Component {
                             {
                                 notes.map(note => {
                                     return (
-                                        <div className="card card-body shadow mb-2" key={note.id}>
-                                            <p>{note.data.title}</p>
+                                        <div className="card card-body shadow mb-2 cursor-pointer" key={note.id} onClick={() => this.handleUpdateNotes(note)}>
+                                            <strong>{note.data.title}</strong>
                                             <small>{note.data.date}</small>
                                             <p>{note.data.content}</p>
                                         </div>
                                     )
-                                })
+                                }).reverse()
                             }
                         </Fragment>
                     ) : 'Loading...'
@@ -81,7 +119,8 @@ const reduxState = (state) => ({
 
 const reduxDispatch = (dispatch) => ({
     saveNotes: (data) => dispatch(addDataToAPI(data)),
-    getNotes: (data) => dispatch(getDataFromAPI(data))
+    getNotes: (data) => dispatch(getDataFromAPI(data)),
+    updateNotes: (data) => dispatch(updateDataAPI(data))
 })
 
 
