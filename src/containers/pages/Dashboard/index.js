@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { addDataToAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action'
+import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action'
 
 
 // const initialState = { title: '', content: '', date: '' }
@@ -67,6 +67,17 @@ class Dashboard extends Component {
         });
     }
 
+    handleDeleteNotes = (e, note) => {
+        e.stopPropagation()
+        const userData = JSON.parse(localStorage.getItem('userData'))
+        const data = {
+            userId: userData.uid,
+            noteId: note.id
+        }
+        this.props.deleteNotes(data)
+        // alert('ok')
+    }
+
 
     //render
     render() {
@@ -94,10 +105,14 @@ class Dashboard extends Component {
                             {
                                 notes.map(note => {
                                     return (
-                                        <div className="card card-body shadow mb-2 cursor-pointer" key={note.id} onClick={() => this.handleUpdateNotes(note)}>
-                                            <strong>{note.data.title}</strong>
-                                            <small>{note.data.date}</small>
-                                            <p>{note.data.content}</p>
+                                        <div className="card shadow mb-2 cursor-pointer" key={note.id} onClick={() => this.handleUpdateNotes(note)}>
+                                            <div className="card-body">
+                                                <strong>{note.data.title}</strong>
+                                                <small>{note.data.date}</small>
+                                                <p>{note.data.content}</p>
+                                                <button class="btn btn-danger float-right" onClick={(e) => this.handleDeleteNotes(e, note)} style={{ position: 'relative', clear: 'both' }}>X
+                                            </button>
+                                            </div>
                                         </div>
                                     )
                                 }).reverse()
@@ -120,7 +135,8 @@ const reduxState = (state) => ({
 const reduxDispatch = (dispatch) => ({
     saveNotes: (data) => dispatch(addDataToAPI(data)),
     getNotes: (data) => dispatch(getDataFromAPI(data)),
-    updateNotes: (data) => dispatch(updateDataAPI(data))
+    updateNotes: (data) => dispatch(updateDataAPI(data)),
+    deleteNotes: (data) => dispatch(deleteDataAPI(data))
 })
 
 

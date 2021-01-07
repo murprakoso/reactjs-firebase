@@ -66,6 +66,7 @@ export const loginUserAPI = (data) => (dispatch) => {
 /**
  * CRUD
  */
+// save
 export const addDataToAPI = (data) => (dispatch) => {
     database.ref('notes/' + data.userId).push({
         title: data.title,
@@ -74,6 +75,7 @@ export const addDataToAPI = (data) => (dispatch) => {
     })
 }
 
+// 
 export const getDataFromAPI = (userId) => (dispatch) => {
     return new Promise((resolve, reject) => {
         const urlNotes = database.ref('notes/' + userId);
@@ -93,9 +95,10 @@ export const getDataFromAPI = (userId) => (dispatch) => {
     })
 }
 
+//update
 export const updateDataAPI = (data) => (dispatch) => {
     return new Promise((resolve, reject) => {
-        const urlNotes = database.ref(`notes/${data.userId}/${data.noteId}`);
+        const urlNotes = database.ref(`notes/${data.userId}/${data.noteId}`)
         urlNotes.set({
             title: data.title,
             content: data.content,
@@ -107,5 +110,13 @@ export const updateDataAPI = (data) => (dispatch) => {
                 resolve(true)
             }
         });
+    })
+}
+
+// delete
+export const deleteDataAPI = (data) => (dispatch) => {
+    return new Promise((resolve, reject) => {
+        const urlNotes = database.ref(`notes/${data.userId}/${data.noteId}`)
+        urlNotes.remove()
     })
 }
